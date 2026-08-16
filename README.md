@@ -19,7 +19,7 @@ DeepSeek Harness (DSH) 的 Token 用量统计面板：模型用量、Token 消�
 ### 方式一：本地安装（开发）
 ```bash
 cd ~/.dsh/local-plugins
-git clone https://github.com/zhang-jiazhi/-.git
+git clone https://github.com/zhang-jiazhi/dsh-stats-panel.git
 cd dsh-stats-panel && pnpm install
 # 构建（需按 DSH 官方 clientBundle 流程）
 ./node_modules/.bin/tsc -p tsconfig.build.json
