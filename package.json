@@ -5,14 +5,23 @@
   "type": "module",
   "main": "lib/index.js",
   "exports": {
-    ".": { "default": "./lib/index.js" },
-    "./client": { "default": "./lib/client.js" },
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
     "./package.json": "./package.json"
   },
   "dsh": {
-    "bundle": { "patch": "./cordis.patch.yml" },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
     "client": {
-      "inject": ["@deepseek-ai/dsh-cordis-client-runner", "@deepseek-ai/dsh-client-connection"],
+      "inject": [
+        "@deepseek-ai/dsh-cordis-client-runner",
+        "@deepseek-ai/dsh-client-connection"
+      ],
       "platform": "web"
     }
   },
@@ -35,5 +44,15 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/zhang-jiazhi/dsh-stats-panel.git"
+  },
+  "homepage": "https://github.com/zhang-jiazhi/dsh-stats-panel#readme",
+  "bugs": {
+    "url": "https://github.com/zhang-jiazhi/dsh-stats-panel/issues"
+  },
+  "scripts": {
+    "verify:balances": "node scripts/verify-balances.mjs"
+  },
+  "engines": {
+    "node": ">=22.19.0"
   }
 }

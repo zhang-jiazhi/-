@@ -81,6 +81,20 @@ cd dsh-stats-panel && pnpm install
 
 数据持久化于 `~/.dsh/stats-panel/records.jsonl`（按 sessionId+seq 去重，跨重启安全）。
 
+## 常见问题
+
+- **OpenAI / Anthropic 的用量查不到？** 这两个平台的用量接口需要组织级（管理员）API Key，普通项目 Key 会返回 403（页面显示查询失败）。
+- **MiMo Token Plan 为什么没有自动余量？** 该平台无公开的余额/用量 API，请在 MiMo 控制台查看后在页面手动填写。
+- **费用为什么和实际账单不一致？** 费用按你配置的价格表估算；套餐渠道（OpenCode Go / MiMo / OpenAI / Anthropic）建议将模型价格设为 0，避免与套餐额度重复计费。
+- **换机器后价格配置丢失？** 价格表存于浏览器 localStorage；如需迁移可在「模型价格」编辑后导出。
+- **数据存在哪里？** 用量数据存 `~/.dsh/stats-panel/records.jsonl`（按 sessionId+seq 去重）。
+
+## 贡献
+
+欢迎提交 PR：
+- 新增渠道适配器：见 [docs/CHANNELS.md](docs/CHANNELS.md)
+- 余额连通性验证：`node scripts/verify-balances.mjs`
+
 ## License
 
 Apache-2.0
