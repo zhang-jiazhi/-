@@ -381,8 +381,8 @@ async function probeChannel(ctx: Context, config: ProviderConfig, resolveKey: (n
       { label: '7天', windowMs: 7 * day },
       { label: '30天', windowMs: 30 * day },
     ]
-    const usage: Array<{ label: string; inputTokens: number; outputTokens: number }> = []
-    for (const bucket of buckets) {
+    // Buckets are independent — query them concurrently to bound wall time.
+    const usage = await Promise.all(buckets.map(async (bucket) => {
       const start = Math.floor((now - bucket.windowMs) / 1000)
       const body = await probeJson(
         `https://api.openai.com/v1/usage?start_time=${start}&bucket_width=1d`,
@@ -395,8 +395,8 @@ async function probeChannel(ctx: Context, config: ProviderConfig, resolveKey: (n
         input += numField(row, 'input_tokens') ?? 0
         output += numField(row, 'output_tokens') ?? 0
       }
-      usage.push({ label: bucket.label, inputTokens: input, outputTokens: output })
-    }
+      return { label: bucket.label, inputTokens: input, outputTokens: output }
+    }))
     return { channel: config.provider, kind: 'plan', displayName: config.displayName, usage, fetchedAt: now }
   }
 
@@ -410,8 +410,8 @@ async function probeChannel(ctx: Context, config: ProviderConfig, resolveKey: (n
       { label: '7天', windowMs: 7 * day },
       { label: '30天', windowMs: 30 * day },
     ]
-    const usage: Array<{ label: string; inputTokens: number; outputTokens: number }> = []
-    for (const bucket of buckets) {
+    // Buckets are independent — query them concurrently.
+    const usage = await Promise.all(buckets.map(async (bucket) => {
       const start = new Date(now - bucket.windowMs).toISOString()
       const body = await probeJson(
         `https://api.anthropic.com/v1/organizations/usage/costs?start_time=${start}&bucket_width=1h`,
@@ -425,8 +425,8 @@ async function probeChannel(ctx: Context, config: ProviderConfig, resolveKey: (n
         input += numField(usagePart ?? {}, 'input_tokens') ?? 0
         output += numField(usagePart ?? {}, 'output_tokens') ?? 0
       }
-      usage.push({ label: bucket.label, inputTokens: input, outputTokens: output })
-    }
+      return { label: bucket.label, inputTokens: input, outputTokens: output }
+    }))
     return { channel: config.provider, kind: 'plan', displayName: config.displayName, usage, fetchedAt: now }
   }
 
