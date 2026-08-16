@@ -578,6 +578,12 @@ export function computeSummary(records: readonly UsageRecord[]): StatsSummary {
   }
 }
 
+/** Small TTL cache for the balances route (see CACHE_TTL_MS). */
+const balancesCache = { value: undefined as { at: number; balances: ChannelBalance[] } | undefined,
+  get() { return this.value },
+  set(balances: ChannelBalance[]) { this.value = { at: Date.now(), balances } },
+}
+
 /**
  * Mount the collector and routes.
  * @param ctx - host plugin context carrying webServer.
@@ -699,6 +705,14 @@ export function apply(ctx: Context): void {
         writeJson(res, 405, { error: `method not allowed: ${req.method}` })
         return
       }
+      // 60s in-memory cache: opening the settings page repeatedly must not
+      // hammer every provider's account API.
+      const CACHE_TTL_MS = 60_000
+      const cached = balancesCache.get()
+      if (cached !== undefined && Date.now() - cached.at < CACHE_TTL_MS) {
+        writeJson(res, 200, { balances: cached.balances, cached: true })
+        return
+      }
       const credentials = ctx.get('credentials')
       const resolveKey = async (name: string): Promise<string | undefined> => {
         if (credentials === undefined || name === '') return undefined
@@ -725,6 +739,7 @@ export function apply(ctx: Context): void {
           })
         }
       }
+      balancesCache.set(results)
       writeJson(res, 200, { balances: results })
     },
   }
