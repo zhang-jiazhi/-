@@ -1,0 +1,39 @@
+{
+  "name": "@linxin666/dsh-stats-panel",
+  "version": "0.2.0",
+  "description": "Token usage statistics for DeepSeek Harness: per-channel usage, balances and plan quotas for mainstream providers, cost estimates in CNY — a settings-sidebar section.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": { "default": "./lib/client.js" },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "inject": ["@deepseek-ai/dsh-cordis-client-runner", "@deepseek-ai/dsh-client-connection"],
+      "platform": "web"
+    }
+  },
+  "files": [
+    "lib",
+    "src",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "token",
+    "usage",
+    "statistics",
+    "balance"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhang-jiazhi/dsh-stats-panel.git"
+  }
+}
