@@ -67,11 +67,16 @@ cd dsh-stats-panel && pnpm install
 
 ## 开发
 
+仓库已包含预构建产物（`lib/`），安装后开箱即用，无需构建。
+
+如需从源码重建：
+
 ```bash
 # 类型检查
 ./node_modules/.bin/tsc -p tsconfig.build.json
 # 构建（node half + client bundle）
-./node_modules/.bin/tsdown --env.DSH_BUILD_FACE=client
+# 注意：client bundle 使用 DSH 官方 tsdown.client 工厂（__ModuleLoader__ closure 格式），
+# 需要在 DSH 源码仓库环境中构建；社区用户直接使用 lib/ 预构建产物即可。
 ```
 
 数据持久化于 `~/.dsh/stats-panel/records.jsonl`（按 sessionId+seq 去重，跨重启安全）。
