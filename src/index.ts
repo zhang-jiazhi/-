@@ -5,6 +5,14 @@
  * ~/.dsh/stats-panel/records.jsonl, and serves aggregated statistics to the
  * browser half over the /api/stats-panel route family (plain same-origin
  * fetch, loopback trust fence — mirrors the dsh-ssh pairing routes).
+ *
+ * Routes:
+ *   /api/stats-panel/summary   — aggregated usage statistics (loopback-only)
+ *   /api/stats-panel/balances  — per-channel account statuses (balance /
+ *                                plan quota / usage windows; 60s cache)
+ *
+ * Channel account probes are adapter-dispatched by base URL — see
+ * probeChannel() and docs/CHANNELS.md for adding providers.
  */
 
 import type { Context } from '@deepseek-ai/cordis'
